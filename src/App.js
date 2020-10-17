@@ -52,7 +52,7 @@ class App extends React.Component {
     return(
       <div className={'container'}>
         <Form addItem={this.addItem.bind(this)}  data={this.state.listToDo} />
-        <ListTodo data={this.state.listToDo} deleteItem={this.removeItem.bind(this)}/>
+        <ListTodo changeStatus={this.changeStatus.bind(this)} data={this.state.listToDo} deleteItem={this.removeItem.bind(this)}/>
       </div>
     )
   }
@@ -121,7 +121,7 @@ class Form extends React.Component {
 class ListTodo extends React.Component {
   render(){
     let listData = this.props.data.map((item, index)=>{
-      return <Item item={item}/>
+      return <Item changeStatus={this.props.changeStatus} deleteItem={this.props.deleteItem} item={item}/>
     })
     return(
       <div className={'row'}>
@@ -145,21 +145,20 @@ class ListTodo extends React.Component {
   }
 }
 class Item extends React.Component {
-  handleChangeStatus() {
+  handleChangeStatus = () => {
     const item = this.props.item;
-    console.log(item);
+    item.status = !item.status;
+    this.props.changeStatus(item);
   }
 
   handleDelete = () => {
     const idItem = this.props.item.id;
     this.props.deleteItem(idItem);
-    // console.log(idItem)
-    // console.log(this.props)
   }
 
   render() {
     return (
-    <tr className="bg-secondary data bg-light">
+    <tr className={this.props.item.status ? 'data bg-light' :  'bg-secondary data'}>
       <td onClick={this.handleChangeStatus}><span className={this.props.item.status ? 'text-left d-none' : 'text-left'}>
         <FontAwesomeIcon icon={faCheck}/></span></td>
       <td>
@@ -167,7 +166,7 @@ class Item extends React.Component {
           <del> {this.props.item.status ? '' :  this.props.item.name  }</del>
         </div>
       </td>
-      <td onClick={() => { this.props.deleteItem(this.props.item.id).bind(this)}}><span className="text-left">
+      <td onClick={this.handleDelete}><span className="text-left">
         <FontAwesomeIcon icon={faTimes} />
       </span></td>
     </tr>
@@ -175,90 +174,5 @@ class Item extends React.Component {
   }
 }
 
-// class Form extends React.Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       fname: '', lname: '',full: ''
-//     }
-//
-//     this.setname = this.setname.bind(this);
-//     // this.setfname = this.setfname.bind(this);
-//     // this.setlname = this.setlname.bind(this);
-//     this.setcount = this.setcount.bind(this);
-//     this.showname = this.showname.bind(this);
-//   }
-//
-//   setname(e) {
-//       console.log(e.target.value)
-//       this.setState({
-//           name: e.target.value
-//       })
-//   }
-//
-//   setcount(e) {
-//       this.setState({
-//           count: this.state.count + 1
-//       })
-//   }
-//   showname(e) {
-//       this.setState({
-//           full: this.state.fname + ' ' + this.state.lname
-//       })
-//   }
-//
-//     setfname(e) {
-//       this.setState({
-//           fname: e.target.value
-//       })
-//     }
-//     setlname(e) {
-//         this.setState({
-//             lname: e.target.value
-//         })
-//     }
-//
-//   handleChange(e) {
-//     this.setState({
-//       [e.target.name] : e.target.value
-//     })
-//   }
-//   handleSubmit(e) {
-//     e.preventDefault();
-//     this.showname(e);
-//   }
-//   render() {
-//     let arr = ['a', 'b', 'c', 'd'];
-//     let listData = arr.map((item) => {
-//       return <Item name={item} key={item}/>
-//     })
-//     return (
-//         <>
-//             {/*<input value={this.state.name} type="text" onChange={this.setname}/>*/}
-//             {/*<h2>{this.state.count}</h2>*/}
-//             {/*<button onClick={this.setcount}>Theem</button>*/}
-//             <h2>Tusplus Thong dep zai</h2>
-//             <hr/>
-//           <form action="" onSubmit={this.handleSubmit.bind(this)}>
-//             <input name={'fname'} type="text" value={this.state.fname} onChange={this.handleChange.bind(this)}/>
-//             <br/>
-//             <input name={'lname'} type="text" value={this.state.lname} onChange={this.handleChange.bind(this)}/>
-//             <br/>
-//             <button type={"submit"}>Submit</button>
-//             <hr/>
-//           </form>
-//             <h3>Your fuLL NAME</h3>
-//             <p>{this.state.full}</p>
-//           {listData}
-//         </>
-//     )
-//   }
-// }
-//
-// function Item(props) {
-//   return (
-//     <li>{props.name}</li>
-//   )
-// }
 
 export default App;
